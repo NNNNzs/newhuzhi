@@ -6,13 +6,18 @@ import router from './router'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import axios from 'axios'
+import Vuex from 'vuex'
+import store from './store/index'
 
+Vue.prototype.axios = axios
 Vue.config.productionTip = false
 Vue.use(iView)
+Vue.use(Vuex)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store
 })

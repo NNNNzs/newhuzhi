@@ -3,7 +3,7 @@
   <n-banner></n-banner>
   <div class="main-container">
     <n-main></n-main>
-      <n-side></n-side>
+    <n-side></n-side>
   </div>
 </div>
 </template>
@@ -27,18 +27,12 @@ export default {
 body {
   background-color: #f6f6f6;
 }
-header {
-  margin-bottom: 10px;
-}
+
 .main-container {
   width: 1000px;
   margin: 0 auto;
-  background-color: lightblue;
 }
-.main-content {
-  width: 650px;
-  float: left;
-}
+
 .main-side {
   margin-left: 10px;
   width: 330px;
