@@ -47,7 +47,6 @@ export default {
     openDrawer(url){
       this.$store.commit('toggleDrawer');
       this.$store.commit('setDrawerUrl',url)
-
     }
   }
 };
