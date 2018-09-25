@@ -25,6 +25,5 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     //允许自闭合的标签
     "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }],
-    "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }]
   }
 };

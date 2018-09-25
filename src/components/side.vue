@@ -20,7 +20,7 @@
         </p>
     </Card>
     </Affix>
-    <Drawer title="新闻预览" :closable="false" v-model="Drawer" width="30%"　@on-close="drawerClose">
+    <Drawer title="新闻预览" :closable="false" v-model="Drawer" width="30%" @on-close="drawerClose">
         <iframe id="frame" :src="DrawerUrl" frameborder="0">
         </iframe>
     </Drawer>
@@ -40,13 +40,13 @@ export default {
             return this.$store.state.Drawer
         },
         DrawerUrl(){
-            return this.$store.state.DrawerUrl
+            return this.$store.state.DrawerUrl.replace("http","https")
         }
     }
 }
 
 </script>
-<style>
+<style scoped>
 .categoryList{
     list-style: none;
     display: flex;

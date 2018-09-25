@@ -8,7 +8,11 @@ import 'iview/dist/styles/iview.css'
 import axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/index'
+<<<<<<< HEAD
 import './assets/style/main.css'
+=======
+import './assets/main.css'
+>>>>>>> 445119fb2391321258c6c8b3ed95b8374f2ad869
 
 Vue.prototype.axios = axios
 Vue.config.productionTip = false

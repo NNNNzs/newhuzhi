@@ -48,7 +48,6 @@ export default {
       url = url.replace('http','https');
       this.$store.commit('toggleDrawer');
       this.$store.commit('setDrawerUrl',url)
-
     }
   }
 };
