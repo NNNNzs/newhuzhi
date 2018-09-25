@@ -24,10 +24,6 @@ export default {
 </script>
 
 <style>
-body {
-  background-color: #f6f6f6;
-}
-
 .main-container {
   width: 1000px;
   margin: 0 auto;
