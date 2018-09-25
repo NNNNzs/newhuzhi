@@ -15,8 +15,6 @@
     </div>
     <Card >
         <p slot="title">
-            <Icon type="ios-film-outline"></Icon>
-            Classic film
         </p>
     </Card>
     </Affix>

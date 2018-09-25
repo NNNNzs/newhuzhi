@@ -29,8 +29,15 @@
             <MenuItem name= "chat" >
                 <Icon type="ios-chatbubbles" size="24"/>
             </MenuItem>
-            <MenuItem name= "avatar" >
-            <Avatar src="https://tvax4.sinaimg.cn/crop.0.0.996.996.180/8b1fa16fly8fiu0vgmb4nj20ro0roabo.jpg" size="large" />
+            <MenuItem name= "avatar" class="avatar">
+            <Poptip placement="top">
+              <Avatar src="https://tvax4.sinaimg.cn/crop.0.0.996.996.180/8b1fa16fly8fiu0vgmb4nj20ro0roabo.jpg" size="large" />
+              <div slot="content">
+                <a>我的主页</a>
+                <a>设置</a>
+                <a>退出</a>
+              </div>
+            </Poptip>
             </MenuItem>
         </div>
     </div>
@@ -74,25 +81,30 @@ export default {
       }, 200);
     },
     search() {
-      //用真实数据模拟实时数据减少请求
-      console.log(newsJson)
-      if ((newsJson.result.stat== "1" )) {
-        let data = newsJson.result.data
-        this.$store.commit("set",data);
-      }
-      // this.axios({
-      //   url:"https://www.nnnnzs.cn/api/news.php"
-      // }).then(res => {
-      //     if ((res.data.result.stat== "1" )) {
-      //       let data = res.data.result.data
-      //       this.$store.commit("set",data);
-      //     }
-      //   });
+      // 用真实数据模拟实时数据减少请求
+      // console.log(newsJson)
+      // if ((newsJson.result.stat== "1" )) {
+      //   let data = newsJson.result.data
+      //   this.$store.commit("set",data);
+      // }
+      this.axios({
+        url:"http://www.nnnnzs.cn:3000/api/getnews"
+      }).then(res => {
+        if ((res.status == 200 )) {
+            let data = res.data.data;
+            this.$store.commit("set",data);
+          }
+        });
     }
   }
 };
 </script>
-<style>
+<style scoped>
+.avatar p{
+  padding: 5px 0px;
+  text-decoration: #8590a6;
+  text-align: left;
+}
 banner{
   margin-bottom: 10px;
 }

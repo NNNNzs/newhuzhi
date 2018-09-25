@@ -8,9 +8,13 @@
                 <a><span><Icon type="logo-javascript" />想法</span></a>
             </Card>
             <Card class="card" v-for="item in newsList" :key="item.uniquekey">
-              <span slot="extra">ｘ</span>            
-              <div class="source">热门内容,来自:{{item.author_name}}</div>
-              <div class="source"><Time :time="item.date" /></div>
+              <a class='card-close' slot="extra">ｘ</a>
+              <div class="source">类别:{{item.category}} 来源:{{item.author_name}}</div>
+              <div class="source">
+                 <Tooltip :content="item.date" placement="top">
+                <Time :time="item.date" />
+                 </Tooltip>
+              </div>
               <a  @click="openDrawer(item.url)">
                 <h2>{{item.title}}</h2>
               </a>
@@ -36,18 +40,13 @@ export default {
     newsList() {
       //ajax传回来的值
       return this.$store.state.axiosDate;
-    }
-  },
-  created() {
-    for (let i = 0; i <= 10; i++) {
-      this.card.push({ id: ++this.id, content: this.content + 1 });
-    }
+    },   
   },
   methods: {
     openDrawer(url){
       this.$store.commit('toggleDrawer');
       this.$store.commit('setDrawerUrl',url)
-    }
+    },
   }
 };
 </script>
@@ -59,6 +58,13 @@ export default {
 .card {
   margin-bottom: 10px;
   padding: 0px;
+}
+.card-close{
+  color: initial;
+  display: none;
+}
+.card:hover .card-close{
+  display: block;
 }
 .card .source {
   text-align: left;
