@@ -38,7 +38,7 @@ export default {
             return this.$store.state.Drawer
         },
         DrawerUrl(){
-            return this.$store.state.DrawerUrl.replace("http","https")
+            return this.$store.state.DrawerUrl;
         }
     }
 }
