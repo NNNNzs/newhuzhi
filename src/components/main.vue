@@ -44,13 +44,14 @@ export default {
   },
   methods: {
     openDrawer(url){
+      url = url.replace('http','https');
       this.$store.commit('toggleDrawer');
       this.$store.commit('setDrawerUrl',url)
     },
   }
 };
 </script>
-<style>
+<style scoped>
 .main-content {
   width: 650px;
   float: left;

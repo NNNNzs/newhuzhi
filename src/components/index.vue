@@ -23,8 +23,7 @@ export default {
 };
 </script>
 
-<style >
-
+<style>
 .main-container {
   margin-top: 10px;
   width: 1000px;
