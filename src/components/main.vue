@@ -19,9 +19,21 @@
                 <h2>{{item.title}}</h2>
               </a>
               <div class="imgList">
-                <img v-if="item.thumbnail_pic_s" :src="item.thumbnail_pic_s">
-                <img v-if="item.thumbnail_pic_s02" :src="item.thumbnail_pic_s02" >
-                <img v-if="item.thumbnail_pic_s02" :src="item.thumbnail_pic_s03" >
+                <Carousel loop autoplay v-if="item.thumbnail_pic_s02">
+                  <CarouselItem v-if="item.thumbnail_pic_s">
+                  <img :src="item.thumbnail_pic_s">
+                  </CarouselItem>
+                  <CarouselItem v-if="item.thumbnail_pic_s02">
+                  <img :src="item.thumbnail_pic_s02">
+                  </CarouselItem>
+                  <CarouselItem v-if="item.thumbnail_pic_s03">
+                  <img :src="item.thumbnail_pic_s03">
+                  </CarouselItem>
+                </Carousel>
+                <img :src="item.thumbnail_pic_s" v-else>
+              </div>
+              <div class="guide">
+                <p>{{item.guide}}</p>
               </div>
             </Card>
         </div>
@@ -59,6 +71,8 @@ export default {
 .card {
   margin-bottom: 10px;
   padding: 0px;
+  /* clear: both; */
+  overflow:auto;
 }
 .card-close{
   color: initial;
@@ -93,12 +107,19 @@ export default {
   margin: 0 15px;
 }
 .imgList {
-  display: flex;
+  width: 40%;
+  float: left;
+  margin: 5px;
 }
 .imgList img {
-  width: 30%;
-  height: 80%;
+  width: 100%;
   margin-right: 3%;
+}
+.guide{
+  /* margin: 0 40px; */
+  margin-left: 40px;
+  text-align: left;
+  text-indent:2rem;
 }
 </style>
 
