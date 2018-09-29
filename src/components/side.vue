@@ -11,6 +11,7 @@
         </div>
     </Card>
     <div class="adv">
+        <a class="adv-close">X</a>
         <img class="adv-img" src="../img/loading.gif">
     </div>
     <Card >
@@ -61,9 +62,6 @@ export default {
 .adv{
     position: relative;
 }
-.close{
-    top: 40px;
-}
 #frame{
     width: 100%;
     height: 100%;
@@ -72,5 +70,14 @@ export default {
     margin: 5px 0;
     width: 100%;
     height: 100%;
+}
+.adv-close{
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.adv:hover .adv-close{
+    display: block;
 }
 </style>

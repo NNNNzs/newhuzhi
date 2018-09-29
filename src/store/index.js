@@ -8,7 +8,7 @@ export default new Vuex.Store({
     axiosDate: [],
     noticeNum: 3, // 提示数字
     Drawer: false, // 抽屉
-    DrawerUrl: 'https://wx.nnnnzs.cn' // 默认ifram的地址
+    DrawerUrl: 'https://www.nnnnzs.cn' // 默认ifram的地址
   },
   mutations: {// 方法
     set (state, msg) {

@@ -71,7 +71,6 @@ export default {
 .card {
   margin-bottom: 10px;
   padding: 0px;
-  /* clear: both; */
   overflow:auto;
 }
 .card-close{

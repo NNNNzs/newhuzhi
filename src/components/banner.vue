@@ -9,13 +9,13 @@
             首页
         </MenuItem>
         <MenuItem name="explore">
-            发现
+            留言
         </MenuItem>
-        <MenuItem name="topic">
-            话题
+        <MenuItem name="topic" >
+            关于
         </MenuItem>
         <MenuItem name="search">
-            <Input size="large" @on-enter="search" search @on-focus="inputFocus" @on-blur="inputBlur" ref="search"/>
+            <Input size="large" v-model="keywords" @on-enter="search"  search @on-focus="inputFocus" @on-blur="inputBlur" ref="search"/>
         </MenuItem>
         <MenuItem name="ask">
             <Button type="primary" @click="addNotice" ref="ask">提问</Button>
@@ -50,10 +50,17 @@
 
 <script>
 import newsJson from "../assets/news.json"
+import nMain from "./main.vue";
+import nSide from "./side.vue";
 export default {
-  data() {
-    return {
-    };
+  components:{
+    nMain,
+    nSide
+  },
+  data(){
+    return{
+      keywords:''
+    }
   },
   created(){
     this.search();
@@ -81,6 +88,7 @@ export default {
       }, 200);
     },
     search() {
+      console.log(this.keywords)
       // 用真实数据模拟实时数据减少请求
       // console.log(newsJson)
       // if ((newsJson.result.stat== "1" )) {
@@ -88,7 +96,7 @@ export default {
       //   this.$store.commit("set",data);
       // }
       this.axios({
-        url:"http://www.nnnnzs.cn:3000/api/getnews"
+        url:'http://www.nnnnzs.cn:3000/api/getnews?keywords='+this.keywords+'',
       }).then(res => {
         if ((res.status == 200 )) {
             let data = res.data.data;
