@@ -46,6 +46,9 @@ export default {
 
 </script>
 <style scoped>
+a{
+    color: #2d8cf0;
+}
 .categoryList{
     list-style: none;
     display: flex;

@@ -1,6 +1,5 @@
 <template>
     <main>
-        <div class="main-content">
             <Card class="cardHeader" dis-hover>
                 <a><span><Icon type="md-help" />提问</span></a>
                 <a><span><Icon type="ios-paper" />回答</span></a>
@@ -36,34 +35,44 @@
                 <p>{{item.guide}}</p>
               </div>
             </Card>
-        </div>
     </main>
 </template>
 <script>
 export default {
   data() {
     return {
-      card: [{ id: 0, content: "asdasd" }],
-      id: 0,
-      content: "1"
+      keywords:''
     };
+  },
+  created(){
+    this.search();
   },
   computed: {
     newsList() {
-      //ajax传回来的值
       return this.$store.state.axiosDate;
     },   
   },
   methods: {
     openDrawer(url){
-      url = url.replace('http','https');
-      this.$store.commit('toggleDrawer');
+      url = url.replace('http://','//');
       this.$store.commit('setDrawerUrl',url)
+      this.$store.commit('toggleDrawer');
     },
+    search() {
+      console.log(this.keywords)
+      this.axios({
+        url:'https://www.nnnnzs.cn:3000/api/getnews?keywords='+this.keywords+'',
+      }).then(res => {
+        if ((res.status == 200 )) {
+            let data = res.data.data;
+            this.$store.commit("set",data);
+          }
+        });
+    }
   }
 };
 </script>
-<style scoped>
+<style>
 .main-content {
   width: 650px;
   float: left;
@@ -72,6 +81,10 @@ export default {
   margin-bottom: 10px;
   padding: 0px;
   overflow:auto;
+}
+.ivu-tooltip-popper{
+  position: fixed;
+  z-index: 10;
 }
 .card-close{
   color: initial;
@@ -83,10 +96,6 @@ export default {
 .card .source {
   text-align: left;
   color: #8590a6;
-}
-.card a{
-  text-decoration: none;
-  color: #000;
 }
 .card h2{
   text-align: left;
