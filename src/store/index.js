@@ -4,15 +4,26 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {// 存值
-    count: 0,
-    axiosDate: [],
+    axiosDate: {
+      hot: [],
+      technology: [],
+      sport: [],
+      search: []
+    },
     noticeNum: 3, // 提示数字
     Drawer: false, // 抽屉
     DrawerUrl: 'https://www.nnnnzs.cn' // 默认ifram的地址
   },
   mutations: {// 方法
     set (state, msg) {
-      state.axiosDate = msg
+      let key = msg.type
+      let data = msg.data
+      for (let index in data) {
+        state.axiosDate[key].push(data[index])
+      }
+    },
+    clearNews (state, type) {
+      state.axiosDate[type] = []
     },
     addNotice (state) {
       state.noticeNum += 1

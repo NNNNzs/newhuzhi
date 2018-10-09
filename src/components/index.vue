@@ -16,7 +16,7 @@
             关于
         </MenuItem>
         <li name="search" class="ivu-menu-item">
-            <Input size="large" v-model="keywords" @on-enter="search"  search @on-focus="inputFocus" @on-blur="inputBlur" ref="search"/>
+            <Input size="large" placeholder="请输入要搜索的内容" v-model="keywords" @on-enter="search" search  ref="search"/>
         </li>
         <li name="ask" class="ivu-menu-item">
             <Button type="primary" @click="addNotice" ref="ask">提问</Button>
@@ -34,9 +34,9 @@
             <Poptip placement="top">
               <Avatar src="https://tvax4.sinaimg.cn/crop.0.0.996.996.180/8b1fa16fly8fiu0vgmb4nj20ro0roabo.jpg" size="large" />
               <div slot="content">
-                <a>我的主页</a>
-                <a>设置</a>
-                <a>退出</a>
+                <a><li><Icon type="ios-contact" size="24"/>我的主页</li></a>
+                <a><li><Icon type="ios-settings" size="24" />设置</li></a>
+                <a><li><Icon type="ios-exit" size="24"/>退出</li></a>
               </div>
             </Poptip>
             </li>
@@ -44,7 +44,7 @@
     </div>
 </Menu>
 <BackTop :height="100" >
-    <Icon color="gray" type="md-arrow-round-up" size="24"/>
+    <Icon color="gray" type="md-arrow-round-up" size="50"/>
 </BackTop>
 </header>
 <div class="main-container">
@@ -64,42 +64,57 @@ export default {
     nMain,
     nSide
   },
-  data(){
-    return{
-      keywords:''
-    }
+  data() {
+    return {
+      keywords: "" //搜索的关键字
+    };
   },
-  computed:{
-    noticeNum(){
-      return this.$store.state.noticeNum
+  created() {
+    //进入搜索页面前没有内容,阻止进入
+    this.$router.beforeEach((to, from, next) => {
+      if (
+        to.path === "/news/search" &&
+        this.$store.state.axiosDate.search.length === 0
+      ) {
+        this.$Message.error("请输入要搜索的内容");
+        this.$refs.search.focus();
+      } else {
+        next();
+      }
+    });
+  },
+  computed: {
+    noticeNum() {
+      return this.$store.state.noticeNum;
     }
   },
   methods: {
     addNotice() {
-      this.$store.commit("addNotice")
+      this.$store.commit("addNotice");
     },
     clearNotice() {
-      this.$store.commit("clearNotice")
-    },
-    inputFocus() {
-      this.$refs.search.$el.style.width = "350px";
-      this.$refs.ask.$el.style.display = "none";
-    },
-    inputBlur() {
-      this.$refs.search.$el.style.width = "";
-      setTimeout(() => {
-        this.$refs.ask.$el.style.display = "";
-      }, 200);
+      this.$store.commit("clearNotice");
     },
     search() {
-      console.log(this.keywords)
+      this.$Loading.start();
       this.axios({
-        url:'https://www.nnnnzs.cn:3000/api/getnews?keywords='+this.keywords+'',
-      }).then(res => {
-        if ((res.status == 200 )) {
+        url:
+          "https://www.nnnnzs.cn:3000/api/getnews?keywords=" +
+          this.keywords +
+          ""
+      })
+        .then(res => {
+          if (res.status == 200) {
             let data = res.data.data;
-            this.$store.commit("set",data);
+            this.$store.commit("clearNews", "search");
+            this.$store.commit("set", { type: "search", data: data });
+            this.$Loading.finish();
+            this.$router.push("/news/search");
           }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$Loading.error();
         });
     }
   }
@@ -120,12 +135,20 @@ export default {
   width: 330px;
   float: left;
 }
-.avatar p{
-  padding: 5px 0px;
+.avatar li {
+  padding: 5px 0;
+  font-size: 15px;
   text-decoration: #8590a6;
   text-align: left;
 }
-banner{
+.avatar li:hover {
+  background-color: #f6f6f6;
+}
+.avatar i {
+  margin-right: 3px;
+  color: #8590a6;
+}
+banner {
   margin-bottom: 10px;
 }
 .userinfo {

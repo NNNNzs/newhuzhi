@@ -4,33 +4,55 @@ import guest from '@/components/guest.vue'
 import about from '@/components/about.vue'
 import main from '@/components/main.vue'
 import index from '@/components/index.vue'
-
+import newsItem from '@/components/newsItem.vue'
+import login from '@/components/login.vue'
 Vue.use(Router)
 
 export default new Router({
   routes: [{
-      path: '/',
-      name: '首页',
-      component: index,
-      redirect: '/news',//重定向到新闻页面
-      children: [
-        {
-          path: '/news',
-          name: '新闻',
-          component: main,
-        }, 
-        {
-          path: '/guestbook',
-          name: '留言板',
-          component: guest
-        },
-        {
-          path: '/about',
-          name: '关于',
-          component: about
-        }
+    path: '/',
+    name: 'index',
+    component: index,
+    redirect: '/news', // 重定向到新闻页面
+    children: [{
+      path: '/news',
+      name: 'news',
+      component: main,
+      redirect: '/news/hot',
+      children: [{
+        path: '/news/hot',
+        name: 'hot',
+        component: newsItem
+      }, {
+        path: '/news/technology',
+        name: 'technology',
+        component: guest
+      }, {
+        path: '/news/sport',
+        name: 'sport',
+        component: newsItem
+      }, {
+        path: '/news/search',
+        name: 'search',
+        component: newsItem
+      }
       ]
     },
-
+    {
+      path: '/guestbook',
+      name: 'guestbook',
+      component: guest
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: about
+    }
+    ]
+  }, {
+    path: '/login',
+    name: 'login',
+    component: login
+  }
   ]
 })
