@@ -6,25 +6,26 @@
             <li :class="{active:!isSignup}"@click="toggleType(false)">登录</li>
         </ul>
         <div class="inputs">
-            <div v-if="isSignup" class="input-group" >
+            <form v-if="isSignup" class="input-group">
                 <h2>注册</h2>
                 <p>账号</p>
-                <Input size="large" prefix="md-contact" placeholder="账号" v-model="signup.account" @on-change="checkInput('account')"/>
+                <Input size="large" prefix="md-contact" placeholder="请输入英语数字下划线,4-15个字符" v-model="signup.account" 
+                @on-change="checkInput('account')" @on-blur="isRepeat"/>
                 <p>昵称</p>
-                <Input size="large" prefix="md-person" placeholder="昵称" v-model="signup.nickname" @on-change="checkInput('nickname')"/>
+                <Input size="large" prefix="md-person" placeholder="3-15位中英文，数字，下划线，减号" v-model="signup.nickname" @on-change="checkInput('nickname')"/>
                 <p>密码</p>
-                <Input size="large" prefix="md-lock" placeholder="密码" v-model="signup.password" 
+                <Input size="large" prefix="md-lock" placeholder="请输入6位以上密码" v-model="signup.password" 
                 :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType" @on-change="checkInput('password')"/>
-                <Button>注册</Button>
-            </div>
-            <div v-else class="input-group">
+                <Button @click="register">注册</Button>
+            </form>
+            <form v-else class="input-group" >
                 <h2>登录</h2>
                 <p>账号</p>
                 <Input size="large" prefix="md-contact" placeholder="账号" v-model="login.account"/>
                 <p>密码</p>
                 <Input size="large" prefix="md-lock" placeholder="密码" v-model="login.password" :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType"/>
-                <Button>登录</Button>
-            </div>
+                <Button @click="logins">登录</Button>
+            </form>
         </div>
     </div>
 </div>
@@ -33,36 +34,105 @@
 export default {
   data() {
     return {
+      host: "http://192.168.10.29:3001/",
       isSignup: true,
       psdType: {
         type: "password",
         icon: "md-eye-off"
       },
       signup: { account: "", nickname: "", password: "" },
+      flags: { account: false, nickname: false, password: false },
       login: { account: "", password: "" }
     };
   },
   methods: {
-    toggleType(boole) {
-      this.isSignup = boole;
+    toggleType(boolean) {
+      this.isSignup = boolean;
     },
     changPsdInputType() {
-      if (this.psdType.type == "password") {
-        this.psdType = { type: "text", icon: "md-eye" };
-      } else {
-        this.psdType = { type: "password", icon: "md-eye-off" };
-      }
+      //切换密码框是否显示明文
+      this.psdType.type == "password"
+        ? (this.psdType = { type: "text", icon: "md-eye" })
+        : (this.psdType = { type: "password", icon: "md-eye-off" });
     },
     checkInput(type) {
-      switch (type) {
-        case accuont:
-          this.signup.account;
-        case nickname:
-          this.signup.nickname;
-        case password:
-          this.signup.password;
-          console.log()
+      //先判断是不是有空格,有报错
+      if (/[ ]+/.test(this.signup[type])) {
+        this.$Message.error("不应该有空格");
+        return false;
       }
+      switch (type) {
+        case "account": {
+          let value = this.signup.account;
+          let flag = /^\w{1,15}$/.test(value);
+          flag
+          if (!flag) {
+            this.flags.account = false;
+            this.$Message.error("输入英文数字下划线");
+          }
+          else{
+            this.flags.account = 1
+          }
+          break;
+        }
+        case "nickname": {
+          //支持中文
+          let value = this.signup.nickname;
+          let flag = /^[\u4e00-\u9fa5A-Za-z0-9-_]{0,15}$/.test(value);
+          flag
+            ? (this.flags.nickname = true)
+            : this.$Message.error("15个字以内")
+          break;
+        }
+        case "password": {
+          if (this.signup.password.length < 6) break;
+          let value = this.signup.password;
+          let flag = /[a-zA-Z\d_]{6,}/.test(value);
+          flag ? (this.flags.password = true) : this.$Message.error("6位以上");
+          break;
+        }
+      }
+    },
+    isRepeat() {
+      //异步判断注册的账号是否重复
+      if(this.flags.account !== 1){
+        return false;
+      }
+      this.axios({
+        data: { type: "accountRepeat", account: this.signup.account },
+        url: this.host + "api/register",
+        method: "post"
+      }).then(data => {
+        console.log(data.data);
+        if (data.data.status === 404) {
+          this.flags.account = true;
+        } else {
+          this.flags.account = false;
+          this.$Message.error("该账号已被注册");
+        }
+      });
+    },
+    register() {
+      if (!this.flags.nickname || !this.flags.account || !this.flags.password) {
+        this.$Message.error("请输入正确");
+        return false;
+      }
+      this.axios({
+        data: { type: "register", data: this.signup },
+        url: this.host + "api/register",
+        method: "post"
+      }).then(data => {
+        console.log(data);
+      });
+    },
+    logins() {
+      this.axios({
+        data: { account: this.login.account, password: this.login.password },
+        url: this.host + "api/login",
+        method: "post"
+      }).then(data => {
+        console.log(data.data);
+      });
     }
   }
 };
@@ -76,9 +146,7 @@ export default {
   height: var(--login-heigt);
   background-color: rgba(255, 255, 255, 0.3);
   margin: calc(50vh - var(--login-heigt) / 2)
-    calc(50vw - var(--login-width) / 2);
-  /* border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%; */
+    calc(50vw - var(--login-width) / 2); /*计算居中*/
 }
 .bg {
   width: 100vw;
@@ -123,8 +191,8 @@ export default {
   flex-direction: column;
   justify-content: space-around; */
 }
-.inputs input {
-  margin-bottom: 15px;
+.inputs .input-group .ivu-input-wrapper {
+  margin-bottom: 30px;
 }
 </style>
 
