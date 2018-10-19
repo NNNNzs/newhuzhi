@@ -9,7 +9,6 @@ import axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/index'
 import './assets/style/main.css'
-
 Vue.prototype.axios = axios
 Vue.config.productionTip = false
 Vue.use(iView)

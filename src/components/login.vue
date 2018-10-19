@@ -21,7 +21,8 @@
             <form v-else class="input-group" >
                 <h2>登录</h2>
                 <p>账号</p>
-                <Input size="large" prefix="md-contact" placeholder="账号" v-model="login.account"/>
+                <Input size="large" prefix="md-contact" placeholder="账号" 
+                @on-change="checkInput('loginAccount')" v-model="login.account"/>
                 <p>密码</p>
                 <Input size="large" prefix="md-lock" placeholder="密码" v-model="login.password" :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType"/>
                 <Button @click="logins">登录</Button>
@@ -34,14 +35,19 @@
 export default {
   data() {
     return {
-      host: "http://192.168.10.29:3001/",
-      isSignup: true,
+      host: "http://192.168.1.160:3001/",
+      isSignup: true,//页面显示是注册还是登录
       psdType: {
         type: "password",
         icon: "md-eye-off"
       },
       signup: { account: "", nickname: "", password: "" },
-      flags: { account: false, nickname: false, password: false },
+      flags: {//用于鉴别是否允许发送
+        account: false,
+        nickname: false,
+        password: false,
+        loginAccount: false
+      },
       login: { account: "", password: "" }
     };
   },
@@ -65,13 +71,11 @@ export default {
         case "account": {
           let value = this.signup.account;
           let flag = /^\w{1,15}$/.test(value);
-          flag
           if (!flag) {
             this.flags.account = false;
             this.$Message.error("输入英文数字下划线");
-          }
-          else{
-            this.flags.account = 1
+          } else {
+            this.flags.account = 1;
           }
           break;
         }
@@ -81,7 +85,7 @@ export default {
           let flag = /^[\u4e00-\u9fa5A-Za-z0-9-_]{0,15}$/.test(value);
           flag
             ? (this.flags.nickname = true)
-            : this.$Message.error("15个字以内")
+            : this.$Message.error("15个字以内");
           break;
         }
         case "password": {
@@ -91,11 +95,22 @@ export default {
           flag ? (this.flags.password = true) : this.$Message.error("6位以上");
           break;
         }
+        case "loginAccount": {
+          let value = this.login.account;
+          let flag = /^\w{1,15}$/.test(value);
+          if (!flag) {
+            this.flags.loginAccount = false;
+            this.$Message.error("输入英文数字下划线");
+          } else {
+            this.flags.account = true;
+          }
+          break;
+        }
       }
     },
     isRepeat() {
       //异步判断注册的账号是否重复
-      if(this.flags.account !== 1){
+      if (this.flags.account !== 1) {
         return false;
       }
       this.axios({
@@ -126,12 +141,25 @@ export default {
       });
     },
     logins() {
+      if(!this.flags.account){
+        return 
+      }
       this.axios({
-        data: { account: this.login.account, password: this.login.password },
+        withCredentials: true, //带cookie
+        data: {
+          account: this.login.account,
+          password: this.login.password
+        },
         url: this.host + "api/login",
         method: "post"
       }).then(data => {
-        console.log(data.data);
+        console.log(data);
+        if (data.data.status === "success") {
+          this.$store.commit("login", data.data.msg);
+          this.$router.push("/");
+        }else{
+          this.$Message.error(data.data.msg)
+        }
       });
     }
   }

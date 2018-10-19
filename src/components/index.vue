@@ -31,12 +31,19 @@
                 <Icon type="ios-chatbubbles" size="24"/>
             </li>
             <li name= "avatar" class="avatar ivu-menu-item" >
-            <Poptip placement="top">
+            <Poptip placement="top" v-if="!account">
+              <Avatar :src="noname" size="large" />
+              <div slot="content">
+                <a><li @click="toLogin"><Icon type="md-log-in" size="24" />登录</li></a>
+                <a><li @click="toLogin"><Icon type="md-log-out" size="24"/>注册</li></a>
+              </div>
+            </Poptip>
+            <Poptip placement="top" v-else>
               <Avatar src="https://tvax4.sinaimg.cn/crop.0.0.996.996.180/8b1fa16fly8fiu0vgmb4nj20ro0roabo.jpg" size="large" />
               <div slot="content">
                 <a><li><Icon type="ios-contact" size="24"/>我的主页</li></a>
                 <a><li><Icon type="ios-settings" size="24" />设置</li></a>
-                <a><li><Icon type="ios-exit" size="24"/>退出</li></a>
+                <a><li @click="exit"><Icon type="ios-exit" size="24"/>退出</li></a>
               </div>
             </Poptip>
             </li>
@@ -59,6 +66,7 @@
 <script>
 import nMain from "./main.vue";
 import nSide from "./side.vue";
+import noname from "../img/noname.jpg"
 export default {
   components: {
     nMain,
@@ -66,10 +74,12 @@ export default {
   },
   data() {
     return {
-      keywords: "" //搜索的关键字
+      keywords: "",//搜索的关键字
+      noname:noname
     };
   },
   created() {
+    console.log(this.nickname);
     //进入搜索页面前没有内容,阻止进入
     this.$router.beforeEach((to, from, next) => {
       if (
@@ -82,13 +92,23 @@ export default {
         next();
       }
     });
-  },
-  computed: {
-    noticeNum() {
-      return this.$store.state.noticeNum;
+    if(this.account){
+      this.$Notice.open({
+        duration:3,//自动关闭的时间
+        title: '欢迎回来\n'+this.account,
+    });
     }
   },
+  computed: {
+    noticeNum(){return this.$store.state.noticeNum},
+    account(){return this.$store.state.user.account},
+    nickname(){return this.$store.state.user.nickname},
+  },
   methods: {
+    toLogin(){
+      if(!this.$store.state.user.account&&!this.$store.state.user.nickname)
+      this.$router.push('/login')
+    },
     addNotice() {
       this.$store.commit("addNotice");
     },
@@ -116,6 +136,9 @@ export default {
           console.log(err);
           this.$Loading.error();
         });
+    },
+    exit(){
+      this.$store.commit("exit");
     }
   }
 };

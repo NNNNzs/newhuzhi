@@ -10,6 +10,10 @@ export default new Vuex.Store({
       sport: [],
       search: []
     },
+    user: {
+      account: '',
+      nickname: ''
+    },
     noticeNum: 3, // 提示数字
     Drawer: false, // 抽屉
     DrawerUrl: 'https://www.nnnnzs.cn' // 默认ifram的地址
@@ -36,6 +40,13 @@ export default new Vuex.Store({
     },
     setDrawerUrl (state, newUrl) {
       state.DrawerUrl = newUrl
+    },
+    login (state, loginInfo) {
+      state.user = loginInfo
+    },
+    exit (state) {
+      state.user.account = ''
+      state.user.nickname = ''
     }
   }
 })
