@@ -35,14 +35,15 @@
 export default {
   data() {
     return {
-      host: "http://192.168.1.160:3001/",
-      isSignup: true,//页面显示是注册还是登录
+      host: "http://192.168.1.100:3001/",
+      isSignup: true, //页面显示是注册还是登录
       psdType: {
         type: "password",
         icon: "md-eye-off"
       },
       signup: { account: "", nickname: "", password: "" },
-      flags: {//用于鉴别是否允许发送
+      flags: {
+        //用于鉴别是否允许发送
         account: false,
         nickname: false,
         password: false,
@@ -110,20 +111,23 @@ export default {
     },
     isRepeat() {
       //异步判断注册的账号是否重复
+      //首先判断格式是否正确
       if (this.flags.account !== 1) {
         return false;
       }
       this.axios({
-        data: { type: "accountRepeat", account: this.signup.account },
+        data: { type: "isRepeat", account: this.signup.account },
         url: this.host + "api/register",
         method: "post"
       }).then(data => {
         console.log(data.data);
-        if (data.data.status === 404) {
+        if (data.data.status === "success") {
           this.flags.account = true;
+          return false; //如果不重复返回false
         } else {
           this.flags.account = false;
           this.$Message.error("该账号已被注册");
+          return true; //如果重复返回真
         }
       });
     },
@@ -136,29 +140,39 @@ export default {
         data: { type: "register", data: this.signup },
         url: this.host + "api/register",
         method: "post"
-      }).then(data => {
-        console.log(data);
+      }).then(rep => {
+        console.log(rep)
+        if(rep.data.status==='error'){
+          this.$Message.error(rep.data.data);
+        }
+        else if(rep.data.status==='success'){
+          this.login.account=this.signup.account;
+          this.login.password=this.signup.password;
+          this.flags.account ==true;
+          this.logins();
+        }
       });
+      this.flags.nickname,this.flags.account,this.flags.password=false;
     },
     logins() {
-      if(!this.flags.account){
-        return 
+      if (!this.flags.account) {
+        return;
       }
       this.axios({
-        withCredentials: true, //带cookie
+        // withCredentials: true, //带cookie
         data: {
           account: this.login.account,
           password: this.login.password
         },
         url: this.host + "api/login",
         method: "post"
-      }).then(data => {
-        console.log(data);
-        if (data.data.status === "success") {
-          this.$store.commit("login", data.data.msg);
+      }).then(rep => {
+        console.log(rep);
+        if (rep.data.status === "success") {
+          this.$store.commit("login", rep.data.data);
           this.$router.push("/");
-        }else{
-          this.$Message.error(data.data.msg)
+        } else {
+          this.$Message.error(rep.data.data);
         }
       });
     }

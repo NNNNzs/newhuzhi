@@ -26,7 +26,7 @@ export default new Router({
       }, {
         path: '/news/technology',
         name: 'technology',
-        component: guest
+        component: newsItem
       }, {
         path: '/news/sport',
         name: 'sport',

@@ -36,13 +36,21 @@ export default {
   data() {
     return {
       keywords: "",
-      pathName: ""
+      pathName: "",
+      type(){
+        if(this.pathName=='sport')
+        return 'tiyu'
+        else if(this.pathName=='technology')
+        return 'keji';
+        else return 'hot'
+      }
     };
   },
   created() {
     //当前路由不是搜索页面才能进入
     if (this.$store.state.axiosDate[this.pathName].length == 0) {
-      if(this.pathName!=='search'){
+      if (this.pathName !== "search") {
+        console.log(this.pathName)
         this.search();
       }
     }
@@ -69,16 +77,16 @@ export default {
     search() {
       this.$Loading.start();
       this.axios({
-        url:
-          "https://www.nnnnzs.cn:3000/api/getnews?keywords=" +
-          this.keywords +
-          ""
+        url: `http://localhost:3001/api/getnews${
+          this.keywords ? `?keywords=${this.keywords}` : ""
+        }${
+          this.keywords ? `?type=${this.type}` : ""}`
       })
         .then(res => {
           if (res.status == 200) {
             let data = res.data.data;
-            console.log(this.pathName)
-            this.$store.commit("set", {type:this.pathName,data:data});
+            console.log(this.pathName);
+            this.$store.commit("set", { type: this.pathName, data: data });
             this.$Loading.finish();
           }
         })

@@ -31,7 +31,7 @@
                 <Icon type="ios-chatbubbles" size="24"/>
             </li>
             <li name= "avatar" class="avatar ivu-menu-item" >
-            <Poptip placement="top" v-if="!account">
+            <Poptip placement="top" v-if="!user.account">
               <Avatar :src="noname" size="large" />
               <div slot="content">
                 <a><li @click="toLogin"><Icon type="md-log-in" size="24" />登录</li></a>
@@ -79,7 +79,6 @@ export default {
     };
   },
   created() {
-    console.log(this.nickname);
     //进入搜索页面前没有内容,阻止进入
     this.$router.beforeEach((to, from, next) => {
       if (
@@ -92,21 +91,21 @@ export default {
         next();
       }
     });
-    if(this.account){
-      this.$Notice.open({
+    if(this.user.account){
+      this.$Notice.success({
         duration:3,//自动关闭的时间
-        title: '欢迎回来\n'+this.account,
+        title: '欢迎回来\n'+this.user.nickname,
+        desc:this.user.login_time?'上次登录时间'+new Date(this.user.login_time):'', 
     });
     }
   },
   computed: {
     noticeNum(){return this.$store.state.noticeNum},
-    account(){return this.$store.state.user.account},
-    nickname(){return this.$store.state.user.nickname},
+    user(){return this.$store.state.user},
   },
   methods: {
     toLogin(){
-      if(!this.$store.state.user.account&&!this.$store.state.user.nickname)
+      if(!this.user.account&&!this.user.nickname)
       this.$router.push('/login')
     },
     addNotice() {
@@ -119,7 +118,7 @@ export default {
       this.$Loading.start();
       this.axios({
         url:
-          "https://www.nnnnzs.cn:3000/api/getnews?keywords=" +
+          "http//localhost:3001/api/getnews?keywords=" +
           this.keywords +
           ""
       })
