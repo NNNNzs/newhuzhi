@@ -3,7 +3,7 @@
     <div id="login">
         <ul class="type">
             <li :class="{active:isSignup}" @click="toggleType(true)">注册</li>
-            <li :class="{active:!isSignup}"@click="toggleType(false)">登录</li>
+            <li :class="{active:!isSignup}" @click="toggleType(false)">登录</li>
         </ul>
         <div class="inputs">
             <form v-if="isSignup" class="input-group">
@@ -15,7 +15,7 @@
                 <Input size="large" prefix="md-person" placeholder="3-15位中英文，数字，下划线，减号" v-model="signup.nickname" @on-change="checkInput('nickname')"/>
                 <p>密码</p>
                 <Input size="large" prefix="md-lock" placeholder="请输入6位以上密码" v-model="signup.password" 
-                :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType" @on-change="checkInput('password')"/>
+                :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType" @on-enter="register" @on-change="checkInput('password')"/>
                 <Button @click="register">注册</Button>
             </form>
             <form v-else class="input-group" >
@@ -24,7 +24,7 @@
                 <Input size="large" prefix="md-contact" placeholder="账号" 
                 @on-change="checkInput('loginAccount')" v-model="login.account"/>
                 <p>密码</p>
-                <Input size="large" prefix="md-lock" placeholder="密码" v-model="login.password" :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType"/>
+                <Input size="large" prefix="md-lock" placeholder="密码" @on-enter="logins" v-model="login.password" :type="psdType.type" :icon="psdType.icon" @on-click="changPsdInputType"/>
                 <Button @click="logins">登录</Button>
             </form>
         </div>
@@ -35,7 +35,6 @@
 export default {
   data() {
     return {
-      host: "http://192.168.1.100:3001/",
       isSignup: true, //页面显示是注册还是登录
       psdType: {
         type: "password",
@@ -117,7 +116,7 @@ export default {
       }
       this.axios({
         data: { type: "isRepeat", account: this.signup.account },
-        url: this.host + "api/register",
+        url: this.$store.state.host + "/api/register",
         method: "post"
       }).then(data => {
         console.log(data.data);
@@ -138,7 +137,7 @@ export default {
       }
       this.axios({
         data: { type: "register", data: this.signup },
-        url: this.host + "api/register",
+        url: this.$store.state.host+ "/api/register",
         method: "post"
       }).then(rep => {
         console.log(rep)
@@ -164,7 +163,7 @@ export default {
           account: this.login.account,
           password: this.login.password
         },
-        url: this.host + "api/login",
+        url: this.$store.state.host+"/api/login",
         method: "post"
       }).then(rep => {
         console.log(rep);

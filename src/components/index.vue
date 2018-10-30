@@ -118,7 +118,7 @@ export default {
       this.$Loading.start();
       this.axios({
         url:
-          "http//localhost:3001/api/getnews?keywords=" +
+          this.$store.state.host + "/api/getnews?keywords=" +
           this.keywords +
           ""
       })

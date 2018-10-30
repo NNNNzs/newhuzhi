@@ -37,13 +37,7 @@ export default {
     return {
       keywords: "",
       pathName: "",
-      type(){
-        if(this.pathName=='sport')
-        return 'tiyu'
-        else if(this.pathName=='technology')
-        return 'keji';
-        else return 'hot'
-      }
+      page:0
     };
   },
   created() {
@@ -54,6 +48,10 @@ export default {
         this.search();
       }
     }
+  },
+  updated(){
+    if(this.newsList.length==0)
+    this.search();
   },
   watch: {
     $route: {
@@ -66,7 +64,15 @@ export default {
   computed: {
     newsList() {
       return this.$store.state.axiosDate[this.pathName];
-    }
+    },
+    type(){
+        if(this.pathName=='sport')
+        return '体育'
+        else if(this.pathName=='technology')
+        return '科技';
+        else if(this.pathName=='hot')
+        return '头条'
+      }
   },
   methods: {
     openDrawer(url) {
@@ -77,10 +83,8 @@ export default {
     search() {
       this.$Loading.start();
       this.axios({
-        url: `http://localhost:3001/api/getnews${
-          this.keywords ? `?keywords=${this.keywords}` : ""
-        }${
-          this.keywords ? `?type=${this.type}` : ""}`
+        url:`${this.$store.state.host}/api/getnews?type=${this.type}&page=${this.page}`
+        // url: `${_that.$router.status.host}/api/getnews${this.keywords ? `?keywords=${this.keywords}` : ""}${this.keywords ? `?type=${this.type}` : ""}`
       })
         .then(res => {
           if (res.status == 200) {

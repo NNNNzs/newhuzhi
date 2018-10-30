@@ -4,6 +4,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {// 存值
+    host:'http://192.168.15.72:3001',
+    // host:'http://localhost:3001',
     axiosDate: {
       hot: [],
       technology: [],
