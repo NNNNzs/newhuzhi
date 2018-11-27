@@ -4,11 +4,11 @@
     <a class='card-close' slot="extra">ｘ</a>
     <div class="source">类别:{{item.category}} 来源:{{item.author_name}}</div>
     <div class="source">
-        <Tooltip :content="item.date" placement="right">
+        <Tooltip :content="item.date|timeFormat" placement="right">
     <Time :time="item.date" />
         </Tooltip>
     </div>
-    <a  @click="openDrawer(item.url)">
+    <a  @click="openDrawer(item.url,item)">
     <h2>{{item.title}}</h2>
     </a>
     <div class="imgList">
@@ -37,7 +37,7 @@ export default {
     return {
       keywords: "",
       pathName: "",
-      page:0
+      page:1
     };
   },
   created() {
@@ -75,16 +75,17 @@ export default {
       }
   },
   methods: {
-    openDrawer(url) {
+    openDrawer(url,content) {
       url = url.replace("http://", "//");
       this.$store.commit("setDrawerUrl", url);
+      this.$store.commit("showContent", content);
+      // console.log(content);
       this.$store.commit("toggleDrawer");
     },
     search() {
       this.$Loading.start();
       this.axios({
         url:`${this.$store.state.host}/api/getnews?type=${this.type}&page=${this.page}`
-        // url: `${_that.$router.status.host}/api/getnews${this.keywords ? `?keywords=${this.keywords}` : ""}${this.keywords ? `?type=${this.type}` : ""}`
       })
         .then(res => {
           if (res.status == 200) {
@@ -98,7 +99,7 @@ export default {
           console.log(err);
           this.$Loading.error();
         });
-    }
+    },
   }
 };
 </script>

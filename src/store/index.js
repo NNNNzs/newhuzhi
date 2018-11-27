@@ -4,8 +4,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {// 存值
-    host:'http://192.168.15.72:3001',
+    // host:'http://192.168.15.72:3001',
     // host:'http://localhost:3001',
+    host:'https://api.nnnnzs.cn',
     axiosDate: {
       hot: [],
       technology: [],
@@ -15,6 +16,12 @@ export default new Vuex.Store({
     user: {
       account: '',
       nickname: ''
+    },
+    newsDatail:{
+      title:'',
+      date:'',
+      content:'',
+      author_name:'',
     },
     noticeNum: 3, // 提示数字
     Drawer: false, // 抽屉
@@ -44,11 +51,15 @@ export default new Vuex.Store({
       state.DrawerUrl = newUrl
     },
     login (state, loginInfo) {
-      state.user = loginInfo
+      state.user = loginInfo;
     },
     exit (state) {
       state.user.account = ''
       state.user.nickname = ''
+    },
+    showContent(state,newsDatail){
+      state.newsDatail = newsDatail;
+      console.log(state.newsDatail);
     }
   }
 })

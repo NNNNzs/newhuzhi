@@ -20,18 +20,24 @@
     </Card>
     </Affix>
     <Drawer title="新闻预览" :closable="false" v-model="Drawer" width="30%" @on-close="drawerClose">
-        <iframe id="frame" :src="DrawerUrl" frameborder="0">
-        </iframe>
+        <h1>{{newsDatail.title}}</h1>
+        <h3>{{newsDatail.date|timeFormat}}|来源：{{newsDatail.category}}</h3>
+        <hr />
+        <div class="newsView" v-html="newsDatail.content">
+            
+        </div>
     </Drawer>
 </div>
 </template>
 <script>
 export default {
+    
+    // <iframe id="frame" :src="DrawerUrl" frameborder="0">
+    // </iframe>
     methods:{
         drawerClose(){
             this.$store.commit('toggleDrawer');
             console.log('drawerClose')
-
         }
     },
     computed:{
@@ -40,12 +46,21 @@ export default {
         },
         DrawerUrl(){
             return this.$store.state.DrawerUrl;
+        },
+        newsDatail(){
+            return this.$store.state.newsDatail;
         }
     }
 }
 
 </script>
 <style scoped>
+.newsView{
+    width:100%;
+}
+.newsView p{
+    font-size:30px;
+} 
 a{
     color: #2d8cf0;
 }
