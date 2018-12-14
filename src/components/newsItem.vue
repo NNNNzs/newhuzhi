@@ -1,6 +1,6 @@
 <template>
 <div id="newsList">
-<Card class="card" v-for="item in newsList" :data-id="item.ID" :key="item.ID + '-label'">
+<Card class="card" v-for="item in newsList" :data-id="item.ID" :key="item.ID">
     <a class='card-close' slot="extra">ｘ</a>
     <div class="source">类别:{{item.category}} 来源:{{item.author_name}}</div>
     <div class="source">
@@ -137,6 +137,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
+          this.allowLoad = true;
           this.$Loading.error();
         });
       }
