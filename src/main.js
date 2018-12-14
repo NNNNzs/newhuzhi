@@ -20,6 +20,8 @@ Vue.filter('timeFormat',function(time){
   let t = new Date(time);
   let m = t.getMinutes();
   m = m>=10?m:'0'+m;
+  // 另一种风骚的操作方法
+  // m = ('0'+m).slice(-2);
   return `${t.getFullYear()}年${t.getMonth()+1}月${t.getDate()}日${t.getHours()}:${m}`
 })
 new Vue({
