@@ -60,13 +60,6 @@ export default new Vuex.Store({
     showContent(state,newsDatail){
       state.newsDatail = newsDatail;
       console.log(state.newsDatail);
-    },
-    loadMore(state,msg){
-      let key = msg.type
-      let data = msg.data
-      for (let index in data) {
-        state.axiosDate[key].push(data[index])
-      }
     }
   }
 })
