@@ -130,6 +130,30 @@ export default {
           this.$Loading.error();
         });
     },
+    loadMoreNews(){
+      if(this.allowLoad){
+
+      this.page++;
+      this.$Loading.start();
+      this.allowLoad = false;
+      this.axios({
+        url:`${this.$store.state.host}/api/getnews?type=${this.type}&page=${this.page}`
+      })
+        .then(res => {
+          if (res.status == 200) {
+            let data = res.data.data;
+            console.log(this.pathName);
+            this.$store.commit("loadMore", { type: this.pathName, data: data });
+            this.allowLoad = true;
+            this.$Loading.finish();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$Loading.error();
+        });
+      }
+    },
   }
 };
 </script>
