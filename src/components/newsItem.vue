@@ -8,16 +8,16 @@
           <Time :time="item.date"/>
         </Tooltip>
       </div>
-      <a @click="openDrawer(item.url,item)">
+      <a @click="openDrawer(item.url,item);sendCnzz(item.title,item.author_name)" >
         <h2>{{item.title}}</h2>
       </a>
       <div class="imgList">
         <Carousel loop v-if="item.thumbnail_pic_s02 ">
           <CarouselItem v-if="item.thumbnail_pic_s ">
-            <img :src="item.thumbnail_pic_s">
+            <img :src="item.thumbnail_pic_s |setProtocol">
           </CarouselItem>
           <CarouselItem v-if="item.thumbnail_pic_s02 ">
-            <img :src="item.thumbnail_pic_s02">
+            <img :src="item.thumbnail_pic_s02 |setProtocol">
           </CarouselItem>
           <CarouselItem v-if="item.thumbnail_pic_s03 ">
             <img :src="item.thumbnail_pic_s03 |setProtocol">
@@ -154,6 +154,9 @@ export default {
         });
       }
     },
+    sendCnzz(title,type){
+      _czc.push(['_trackEvent', title, type]);
+    }
   }
 };
 </script>
