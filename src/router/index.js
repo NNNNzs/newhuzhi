@@ -18,7 +18,7 @@ export default new Router({
       path: '/news',
       name: 'news',
       component: main,
-      redirect: '/news/hot',
+      redirect: '/news/hot',// 重定向到热点新闻
       children: [{
         path: '/news/hot',
         name: 'hot',
