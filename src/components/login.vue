@@ -158,7 +158,7 @@ export default {
         return;
       }
       this.axios({
-        // withCredentials: true, //带cookie
+        withCredentials: true, //带cookie
         data: {
           account: this.login.account,
           password: this.login.password
