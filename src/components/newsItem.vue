@@ -63,7 +63,6 @@ export default {
     //当前路由不是搜索页面才能进入
     if (this.$store.state.axiosDate[this.pathName].length == 0) {
       if (this.pathName !== "search") {
-        console.log(this.pathName);
         this.search();
       }
     }
@@ -120,7 +119,6 @@ export default {
         .then(res => {
           if (res.status == 200) {
             let data = res.data.data;
-            console.log(this.pathName);
             this.$store.commit("set", { type: this.pathName, data: data });
             this.$Loading.finish();
           }
@@ -142,7 +140,6 @@ export default {
         .then(res => {
           if (res.status == 200) {
             let data = res.data.data;
-            console.log(this.pathName);
             this.$store.commit("loadMore", { type: this.pathName, data: data });
             this.allowLoad = true;
             this.$Loading.finish();
